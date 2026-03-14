@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPLENDOR DISCO NEW | TV TOTAL 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --red: #ff0000; --black: #000000; --card-bg: #111; --text: #ffffff; --gray: #888; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--black); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+
+        nav {
+            background: #000;
+            padding: 15px 5%;
+            border-bottom: 4px solid var(--red);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .logo { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; }
+        .logo span { color: var(--red); }
+        .live-tag { background: var(--red); padding: 4px 12px; border-radius: 3px; font-size: 0.7rem; font-weight: 800; animation: blink 1.2s infinite; }
+        
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
+        .section-title { 
+            font-size: 1.2rem; 
+            text-transform: uppercase; 
+            margin-bottom: 25px; 
+            border-left: 5px solid var(--red); 
+            padding-left: 15px; 
+        }
+
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid #222; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover { border-color: var(--red); transform: translateY(-5px); }
+        .card img { width: 100%; height: 210px; object-fit: cover; transition: 0.5s; }
+        .card:hover img { transform: scale(1.05); }
+        
+        .card-content { padding: 20px; flex-grow: 1; }
+        .card-category { color: var(--red); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 1px; }
+        .card-title { font-size: 1.1rem; font-weight: 700; line-height: 1.3; margin-bottom: 12px; color: #fff; }
+        .card-date { color: var(--gray); font-size: 0.75rem; font-weight: 600; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); z-index: 2000; overflow-y: auto; }
+        .modal-content { max-width: 900px; margin: 40px auto; background: #0a0a0a; border: 1px solid #333; position: relative; }
+        .modal-body { padding: 40px; }
+        .modal-body h2 { font-size: 2.5rem; margin-bottom: 20px; line-height: 1.1; font-weight: 800; }
+        .modal-body p { color: #ddd; line-height: 1.8; font-size: 1.15rem; margin-bottom: 20px; }
+        .close-btn { position: absolute; right: 25px; top: 15px; font-size: 45px; color: var(--red); cursor: pointer; z-index: 10; font-weight: bold; }
+
+        footer { text-align: center; padding: 60px; color: #555; font-size: 0.8rem; border-top: 1px solid #111; margin-top: 50px; text-transform: uppercase; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">SPLENDOR<span>DISCO</span></div>
+    <div class="live-tag">TRANSMISIÓN TV EN VIVO</div>
+</nav>
+
+<div class="container">
+    <div class="section-title">Central de Noticias: Música y Cultura 2026</div>
+    <div class="news-grid" id="mainGrid"></div>
+</div>
+
+<div id="newsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div id="modalData"></div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 SPLENDOR DISCO NEW | LA TV ANTES QUE LAS REDES
+</footer>
+
+<script>
+const allNews = [
+    // --- NUEVOS DE ÚLTIMA HORA ---
+    {
+        title: "Humbertiko y Urbanos regresan con «Me Duele»",
+        cat: "Lanzamiento / Urbano",
+        date: "Enero 27, 2026",
+        img: "https://grupovierci.brightspotcdn.com/dims4/default/e39dd51/2147483647/strip/true/crop/707x398+0+0/resize/1000x563!/quality/90/?url=https%3A%2F%2Fk2-prod-grupo-vierci.s3.us-east-1.amazonaws.com%2Fbrightspot%2F1f%2F0d%2F89f6ebd24075a37fabd71662fd9a%2Fuharyes20321201-008a-ph06-24028-001.jpg",
+        desc: "Un clásico que vuelve. Humbertiko presenta una nueva versión de su éxito junto a Quintana, conectando el pasado con la energía actual del género urbano."
+    },
+    {
+        title: "José Miguel presenta «Cuando vos estabas» junto a Marcelo Gabriel",
+        cat: "Música / Polca",
+        date: "Enero 27, 2026",
+        img: "https://grupovierci.brightspotcdn.com/dims4/default/c64bdf1/2147483647/strip/true/crop/777x437+0+39/resize/1000x563!/quality/90/?url=https%3A%2F%2Fk2-prod-grupo-vierci.s3.us-east-1.amazonaws.com%2Fbrightspot%2Faa%2Fa7%2F2fa29fac48e0a8d3dca93b5a7e4d%2Fuharyes20321201-008a-ph03-6296-001.jpg",
+        desc: "Una polca acústica cargada de sensibilidad que rescata la esencia de la canción de autor paraguaya, explorando la memoria y la identidad."
+    },
+    {
+        title: "Andrea Valobra estrena Soundtrack inspirado en libro «Alicia»",
+        cat: "Arte / Música",
+        date: "Enero 27, 2026",
+        img: "https://grupovierci.brightspotcdn.com/dims4/default/4f65633/2147483647/strip/true/crop/733x413+0+187/resize/1000x563!/quality/90/?url=https%3A%2F%2Fk2-prod-grupo-vierci.s3.us-east-1.amazonaws.com%2Fbrightspot%2Fb7%2F93%2F6338b5304b869eb4f49317fc5abe%2Fuharyes20321201-008a-ph05-26918.jpg",
+        desc: "Un cruce entre música y literatura. Valobra presenta 'Te guardé para mí' y 'Por si no llegue el mañana', basadas en poemas de Marcela Bacigalupo."
+    },
+    {
+        title: "Nicolá lanza «Me acordé de ti», cumbia fresca para el verano",
+        cat: "Lanzamiento / Cumbia",
+        date: "Enero 27, 2026",
+        img: "https://grupovierci.brightspotcdn.com/dims4/default/023e659/2147483647/strip/true/crop/777x437+0+0/resize/1000x563!/quality/90/?url=https%3A%2F%2Fk2-prod-grupo-vierci.s3.us-east-1.amazonaws.com%2Fbrightspot%2Faa%2F0e%2F06cfe1e641729b6928c1118335b0%2Fuharyes20321201-008a-ph02-32513.jpg",
+        desc: "El artista emergente Nicolá presenta una propuesta rítmica y emotiva que marca una nueva etapa en su carrera."
+    },
+    {
+        title: "Rosa Riquelme realiza rescate cultural con «13 Tuyutî»",
+        cat: "Cultura / Folclore",
+        date: "Enero 27, 2026",
+        img: "https://grupovierci.brightspotcdn.com/dims4/default/e39dd51/2147483647/strip/true/crop/707x398+0+0/resize/1000x563!/quality/90/?url=https%3A%2F%2Fk2-prod-grupo-vierci.s3.us-east-1.amazonaws.com%2Fbrightspot%2F1f%2F0d%2F89f6ebd24075a37fabd71662fd9a%2Fuharyes20321201-008a-ph06-24028-001.jpg", 
+        desc: "Un profundo homenaje a la obra de Emiliano R. Fernández, reafirmando el compromiso con la memoria histórica de Paraguay."
+    },
+    // --- ANTERIORES ABC / INDIETEKA / EXTRA ---
+    {
+        title: "“A Lua do Meu Lado”: Aleshit fusiona trap y funk brasileño",
+        cat: "Lanzamiento / Urbano",
+        date: "Marzo 07, 2025",
+        img: "https://www.abc.com.py/resizer/v2/SAEYH447V5ERLPASG7EF5RHEZU.jpg?auth=566b8074a0ff2aa22ee3f906474338682959063b48f332a4d155977cd87ec91f&width=350&height=225&smart=true",
+        desc: "Fusión de trap R&B oscuro y funk brasileño. Aleshit conecta con letras de resistencia y superación."
+    },
+    {
+        title: "Oudithekidd presenta «OKI DOGGY» su nuevo EP",
+        cat: "Lanzamiento / Sonido Local",
+        date: "Febrero 03, 2026",
+        img: "https://indieteka.com/wp-content/uploads/2026/02/oki-doggy-arte-de-tapa.png?w=1920&h=768&crop=1",
+        desc: "La escena urbana local recibe con fuerza el nuevo EP de Oudithekidd."
+    },
+    {
+        title: "Lost Gatos piratea su disco por sus 10 años",
+        cat: "Concierto / Local",
+        date: "Marzo 13, 2026",
+        img: "https://indieteka.com/wp-content/uploads/2026/03/whatsapp-image-2026-03-11-at-2.40.03-pm.jpeg?w=870&h=773&crop=1",
+        desc: "Evento en La Chispa Cultural el 15 de marzo. La banda celebrará pirateando su propio material."
+    },
+    {
+        title: "Asunciónico 2026: Horarios Oficiales",
+        cat: "Festival",
+        date: "Marzo 10, 2026",
+        img: "https://indieteka.com/wp-content/uploads/2026/01/unnamed.png?w=915&h=500&crop=1",
+        desc: "Horarios de The Killers, Sabrina Carpenter, Deftones y más."
+    },
+    {
+        title: "NOD206 regresa con «Voces» tras una década",
+        cat: "Lanzamiento / Local",
+        date: "Marzo 10, 2026",
+        img: "https://indieteka.com/wp-content/uploads/2026/03/nod206_press_photo.jpg?w=870&h=773&crop=1",
+        desc: "Regreso triunfal de la banda antes de Asunciónico."
+    },
+    {
+        title: "GORILLAZ regresa a Paraguay: THE MOUNTAIN TOUR",
+        cat: "Concierto / Internacional",
+        date: "Febrero 27, 2026",
+        img: "https://indieteka.com/wp-content/uploads/2026/02/unnamed.png?w=915&h=500&crop=1",
+        desc: "La banda virtual más famosa confirma su regreso este 2026."
+    },
+    {
+        title: "CA7RIEL & PACO AMOROSO junto a Sting",
+        cat: "Lanzamiento / Música",
+        date: "Febrero 14, 2026",
+        img: "https://indieteka.com/wp-content/uploads/2026/02/cp_hastajesustuvounmaldia.jpg?w=915&h=500&crop=1",
+        desc: "Colaboración histórica entre el trap argentino y la leyenda británica."
+    },
+    {
+        title: "Marilina estrena “Dime quién” con Rodrigo Tapari",
+        cat: "Fama / Cumbia",
+        date: "Enero 09, 2026",
+        img: "https://grupovierci.brightspotcdn.com/dims4/default/e4beb8d/2147483647/strip/true/crop/852x480+0+0/resize/1000x563!/quality/90/?url=https%3A%2F%2Fk2-prod-grupo-vierci.s3.us-east-1.amazonaws.com%2Fbrightspot%2Fec%2Fbc%2Fe4d3794e4e338b558d173f5b7bd5%2Fuharyes20321201-008a-ph01-32755.jpg",
+        desc: "La villarriqueña se une al ex-Ráfaga en un éxito regional."
+    },
+    {
+        title: "FUNK’CHULA alza vuelo con nuevo disco purete",
+        cat: "Música / Funk Local",
+        date: "Septiembre 24, 2025",
+        img: "https://grupovierci.brightspotcdn.com/dims4/default/1742d97/2147483647/strip/true/crop/2500x1405+0+473/resize/500x281!/quality/90/?url=https%3A%2F%2Fk2-prod-grupo-vierci.s3.us-east-1.amazonaws.com%2Fbrightspot%2F17%2Fa0%2Fd54b9c15414ba9a0793f76f7a8ac%2Ftf-05.jpg",
+        desc: "Groove nacional de alta calidad disponible en plataformas."
+    }
+];
+
+const grid = document.getElementById('mainGrid');
+const modal = document.getElementById('newsModal');
+const modalData = document.getElementById('modalData');
+
+function renderNews() {
+    allNews.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+            <img src="${item.img}" alt="Noticia">
+            <div class="card-content">
+                <span class="card-category">${item.cat}</span>
+                <h3 class="card-title">${item.title}</h3>
+                <span class="card-date">${item.date}</span>
+            </div>
+        `;
+        div.onclick = () => openModal(item);
+        grid.appendChild(div);
+    });
+}
+
+function openModal(item) {
+    modalData.innerHTML = `
+        <img src="${item.img}" style="width:100%; max-height:450px; object-fit:cover; border-bottom: 5px solid var(--red);">
+        <div class="modal-body">
+            <span class="card-category">${item.cat}</span>
+            <h2>${item.title}</h2>
+            <span class="card-date">${item.date}</span>
+            <p style="margin-top:20px;">${item.desc}</p>
+        </div>
+    `;
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+window.onclick = (event) => { if (event.target == modal) closeModal(); }
+
+renderNews();
+</script>
+
+</body>
+</html>
